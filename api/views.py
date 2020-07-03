@@ -1,12 +1,20 @@
 from django.contrib.auth.models import Group, Permission
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework import request
+
+from api.authentications import MyAuth
 from api.models import User
+from api.throttle import SendMessageRate
 from utils.response import APIResponse
 from rest_framework import settings
+from rest_framework.authentication import BasicAuthentication
 
 
 class TestAPIView(APIView):
+    # 局部自定义认证器
+    authentication_classes = [MyAuth]
     def get(self, request, *args, **kwargs):
         # # 查询用户
         # user = User.objects.first()
@@ -33,3 +41,38 @@ class TestAPIView(APIView):
         print(per.group_set.first().name)
 
         return APIResponse('ok')
+
+
+class TestPermissionAPIView(APIView):
+    # 只有认证后的才可以访问
+
+    authentication_classes = [MyAuth]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return APIResponse("登录访问成功")
+
+
+class UserLoginOrReadOnly(APIView):
+
+    # 用户登录可写  游客浏览只读
+
+    throttle_classes = [UserRateThrottle]
+
+    # permission_classes = [MyPermission]
+
+    def get(self, request, *args, **kwargs):
+        return APIResponse("read成功")
+
+    def post(self, request, *args, **kwargs):
+        return APIResponse("write写操作")
+
+
+class SendMessageAPIView(APIView):
+    throttle_classes = [SendMessageRate]
+
+    def get(self, request, *args, **kwargs):
+        return APIResponse("read成功")
+
+    def post(self, request, *args, **kwargs):
+        return APIResponse("write写操作")

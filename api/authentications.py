@@ -33,12 +33,12 @@ class MyAuth(BaseAuthentication):
         if not (len(auth_list) == 2 and auth_list[0].lower() == "npf"):
             raise exceptions.AuthenticationFailed("认证信息有误，认证失败")
 
-        # 如果认证成功 则解析用户  规定认证信息必须为abc.admin.123
-        if auth_list[1] != "abc.marry.123":
+        # 如果认证成功 则解析用户  规定认证信息必须为979521
+        if auth_list[1] != "a.npf979.c":
             raise exceptions.AuthenticationFailed("用户信息校验失败")
 
         # 最后校验数据库是否存在此用户
-        user = User.objects.filter(username="admin").first()
+        user = User.objects.filter(username="npf979").first()
 
         if not user:
             raise exceptions.AuthenticationFailed("用户不存在")

@@ -129,11 +129,23 @@ REST_FRAMEWORK={
     'EXCEPTION_HANDLER': 'utils.exceptions.exception_handler',
 # 系统默认的认证器配置
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',  # 基于会话
-        'rest_framework.authentication.BasicAuthentication',     # Basic
+        # 'rest_framework.authentication.SessionAuthentication',  # 基于会话
+        # 'rest_framework.authentication.BasicAuthentication',     # Basic
         # 全局配置自定义认证器
         # 'api.authentications.MyAuth',
     ],
+# 权限类配置
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    # 频率类配置
+    # 'DEFAULT_THROTTLE_CLASSES': [],
+    # Throttling
+    'DEFAULT_THROTTLE_RATES': {
+        'user': "3/m",
+        'anon': None,
+        'send': "1/m",
+    },
 }
 
 # 静态资源的路径
